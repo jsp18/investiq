@@ -1,0 +1,574 @@
+{% extends "base.html" %}
+{% block title %}ML Predictions — InvestIQ{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="page-header">
+        <h2>🤖 ML-Powered Predictions & Recommendations</h2>
+        <p>Real-time stock predictions using Random Forest and Linear Regression models trained on live market data</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('predict', this)">Stock Prediction</button>
+        <button class="tab" onclick="switchTab('recommend', this)">Smart Recommendations</button>
+        <button class="tab" onclick="switchTab('history', this)">Prediction History</button>
+    </div>
+
+    <!-- Tab 1: Stock Prediction -->
+    <div id="tab-predict" class="tab-content active">
+        <div class="glass-card mb-24">
+            <h3 style="margin-bottom: 16px; font-size: 1rem;">Enter a stock symbol to run ML analysis</h3>
+            <div style="display: flex; gap: 12px; align-items: flex-end;">
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                    <label for="predictSymbol">Stock Symbol (NSE)</label>
+                    <input type="text" id="predictSymbol" placeholder="e.g., RELIANCE, TCS, INFY, HDFCBANK" style="text-transform: uppercase;">
+                </div>
+                <button class="btn btn-primary" id="predictBtn" onclick="runPrediction()" style="width: auto; height: 48px;">
+                    🤖 Run ML Prediction
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="predictionLoading" class="hidden">
+            <div class="glass-card" style="text-align: center; padding: 60px;">
+                <div class="spinner" style="width: 48px; height: 48px; margin: 0 auto 20px; border-width: 3px;"></div>
+                <h3 style="margin-bottom: 8px;">Training ML Model...</h3>
+                <p style="color: var(--text-secondary);">Fetching market data, engineering features, and training Random Forest model. This may take 15-30 seconds.</p>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="predictionResults" class="hidden">
+            <!-- Stock Header -->
+            <div class="glass-card mb-24">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 id="predStockName" style="font-size: 1.25rem;"></h3>
+                        <span id="predStockSymbol" style="color: var(--text-muted); font-family: var(--font-mono);"></span>
+                        <span id="predSector" style="color: var(--text-muted); margin-left: 12px;"></span>
+                    </div>
+                    <div style="text-align: right;">
+                        <div id="predCurrentPrice" style="font-size: 1.75rem; font-weight: 800; font-family: var(--font-mono);"></div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem;">Current Price</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-3 mb-24">
+                <!-- Prediction Direction -->
+                <div class="prediction-card">
+                    <div style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">ML Prediction</div>
+                    <div class="prediction-direction" id="predDirection"></div>
+                    <div id="predPredictedPrice" style="font-family: var(--font-mono); font-size: 1.1rem; font-weight: 600;"></div>
+                    <div id="predChangePct" style="font-size: 0.9rem; margin-top: 4px;"></div>
+                    <div style="margin-top: 16px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 4px;">
+                            <span style="color: var(--text-muted);">Model Confidence</span>
+                            <span id="predConfidenceVal" style="font-weight: 600;"></span>
+                        </div>
+                        <div class="confidence-meter">
+                            <div class="confidence-fill" id="predConfidenceBar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk Analysis -->
+                <div class="prediction-card">
+                    <div style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Risk Analysis</div>
+                    <div id="predRiskScore" style="font-size: 3rem; font-weight: 800; margin: 16px 0 8px; color: var(--accent-warning);"></div>
+                    <div id="predRiskLevel" style="font-size: 0.9rem; font-weight: 600;"></div>
+                    <div class="risk-gauge" id="riskGauge" style="margin-top: 16px;">
+                        <!-- Filled by JS -->
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">
+                        <span>Low</span><span>Medium</span><span>High</span>
+                    </div>
+                </div>
+
+                <!-- Expected Return -->
+                <div class="prediction-card">
+                    <div style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Expected Return</div>
+                    <div id="predExpReturn" style="font-size: 3rem; font-weight: 800; margin: 16px 0 8px; color: var(--accent-success);"></div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Annualized (est.)</div>
+                    <div style="margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                            <span style="color: var(--text-muted);">Sharpe Ratio</span>
+                            <span id="predSharpe" style="font-weight: 600; font-family: var(--font-mono);"></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-top: 6px;">
+                            <span style="color: var(--text-muted);">Volatility</span>
+                            <span id="predVolatility" style="font-weight: 600; font-family: var(--font-mono);"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Details -->
+            <div class="grid-2">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title"><span class="icon">🧠</span> Model Training Metrics</div>
+                    </div>
+                    <div id="modelMetrics"></div>
+                </div>
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title"><span class="icon">📊</span> Probability Distribution</div>
+                    </div>
+                    <div style="display: flex; gap: 16px; align-items: center; margin-top: 8px;">
+                        <div style="flex: 1; text-align: center; padding: 20px; background: rgba(16, 185, 129, 0.1); border-radius: 12px;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">UP Probability</div>
+                            <div id="predUpProb" style="font-size: 1.75rem; font-weight: 800; color: var(--accent-success); font-family: var(--font-mono);"></div>
+                        </div>
+                        <div style="flex: 1; text-align: center; padding: 20px; background: rgba(239, 68, 68, 0.1); border-radius: 12px;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">DOWN Probability</div>
+                            <div id="predDownProb" style="font-size: 1.75rem; font-weight: 800; color: var(--accent-danger); font-family: var(--font-mono);"></div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Beta (vs NIFTY50)</div>
+                        <div id="predBeta" style="font-size: 1.25rem; font-weight: 700; font-family: var(--font-mono);"></div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
+                            β > 1: More volatile than market • β < 1: Less volatile
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error -->
+        <div id="predictionError" class="hidden">
+            <div class="glass-card" style="text-align: center; padding: 40px;">
+                <div style="font-size: 2.5rem; margin-bottom: 12px;">❌</div>
+                <h3 style="margin-bottom: 8px;">Prediction Failed</h3>
+                <p id="predErrorMsg" style="color: var(--text-secondary);"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab 2: Recommendations -->
+    <div id="tab-recommend" class="tab-content">
+        <div class="glass-card mb-24">
+            <h3 style="margin-bottom: 16px; font-size: 1rem;">Get ML-powered personalized investment recommendations</h3>
+            <div style="display: flex; gap: 12px; align-items: flex-end;">
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                    <label for="recAmount">Investment Amount (₹)</label>
+                    <input type="number" id="recAmount" placeholder="e.g., 100000" min="1000">
+                </div>
+                <button class="btn btn-success" id="recBtn" onclick="getRecommendations()" style="width: auto; height: 48px;">
+                    💡 Get Recommendations
+                </button>
+            </div>
+        </div>
+
+        <div id="recLoading" class="hidden">
+            <div class="glass-card" style="text-align: center; padding: 60px;">
+                <div class="spinner" style="width: 48px; height: 48px; margin: 0 auto 20px; border-width: 3px;"></div>
+                <h3 style="margin-bottom: 8px;">Analyzing Markets...</h3>
+                <p style="color: var(--text-secondary);">Running ML models on multiple stocks, calculating risk metrics, and generating personalized recommendations. This may take 1-2 minutes.</p>
+            </div>
+        </div>
+
+        <div id="recResults" class="hidden"></div>
+    </div>
+
+    <!-- Tab 3: History -->
+    <div id="tab-history" class="tab-content">
+        <div class="glass-card">
+            <div class="card-header">
+                <div class="card-title"><span class="icon">📜</span> Prediction History</div>
+            </div>
+            <div id="predHistory">
+                <div class="loading-spinner"><div class="spinner"></div> Loading history...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="disclaimer">
+        <span class="warn-icon">⚠️</span>
+        <span>ML predictions are based on historical data and technical indicators. Stock markets are inherently unpredictable. These predictions are for educational purposes only — not financial advice.</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+    
+    if (tabId === 'history') loadPredictionHistory();
+}
+
+function runPrediction() {
+    const symbol = document.getElementById('predictSymbol').value.trim();
+    if (!symbol) { alert('Please enter a stock symbol'); return; }
+    
+    document.getElementById('predictionLoading').classList.remove('hidden');
+    document.getElementById('predictionResults').classList.add('hidden');
+    document.getElementById('predictionError').classList.add('hidden');
+    document.getElementById('predictBtn').disabled = true;
+    
+    fetch('/api/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symbol: symbol })
+    })
+    .then(r => r.json())
+    .then(data => {
+        document.getElementById('predictionLoading').classList.add('hidden');
+        document.getElementById('predictBtn').disabled = false;
+        
+        if (!data.success) {
+            document.getElementById('predictionError').classList.remove('hidden');
+            document.getElementById('predErrorMsg').textContent = data.error;
+            return;
+        }
+        
+        displayPrediction(data);
+    })
+    .catch(err => {
+        document.getElementById('predictionLoading').classList.add('hidden');
+        document.getElementById('predictBtn').disabled = false;
+        document.getElementById('predictionError').classList.remove('hidden');
+        document.getElementById('predErrorMsg').textContent = err.message;
+    });
+}
+
+function displayPrediction(data) {
+    document.getElementById('predictionResults').classList.remove('hidden');
+    
+    const info = data.info || {};
+    const pred = data.prediction || {};
+    const risk = data.risk || {};
+    const ret = data.expected_return || {};
+    const metrics = data.training_metrics || {};
+    
+    // Header
+    document.getElementById('predStockName').textContent = info.name || data.symbol;
+    document.getElementById('predStockSymbol').textContent = data.symbol;
+    document.getElementById('predSector').textContent = info.sector || '';
+    document.getElementById('predCurrentPrice').textContent = '₹' + (pred.current_price?.toLocaleString('en-IN') || '--');
+    
+    // Direction
+    const dirEl = document.getElementById('predDirection');
+    dirEl.textContent = pred.direction === 'UP' ? '▲ UP' : '▼ DOWN';
+    dirEl.className = 'prediction-direction ' + (pred.direction === 'UP' ? 'up' : 'down');
+    
+    document.getElementById('predPredictedPrice').textContent = '₹' + (pred.predicted_price?.toLocaleString('en-IN') || '--');
+    const changePct = pred.predicted_change_pct || 0;
+    const changePctEl = document.getElementById('predChangePct');
+    changePctEl.textContent = (changePct >= 0 ? '+' : '') + changePct.toFixed(4) + '%';
+    changePctEl.className = changePct >= 0 ? 'text-success' : 'text-danger';
+    
+    // Confidence
+    const conf = pred.confidence || 50;
+    document.getElementById('predConfidenceVal').textContent = conf.toFixed(1) + '%';
+    const confBar = document.getElementById('predConfidenceBar');
+    confBar.style.width = conf + '%';
+    confBar.className = 'confidence-fill ' + (conf >= 65 ? 'high' : conf >= 50 ? 'medium' : 'low');
+    
+    // Probabilities
+    document.getElementById('predUpProb').textContent = (pred.up_probability || 50).toFixed(1) + '%';
+    document.getElementById('predDownProb').textContent = (pred.down_probability || 50).toFixed(1) + '%';
+    
+    // Risk
+    document.getElementById('predRiskScore').textContent = (risk.risk_score || 5).toFixed(1);
+    
+    const riskLevel = risk.risk_level || 'Medium';
+    const riskLevelEl = document.getElementById('predRiskLevel');
+    riskLevelEl.textContent = riskLevel + ' Risk';
+    riskLevelEl.className = riskLevel === 'Low' ? 'text-success' : riskLevel === 'High' || riskLevel === 'Very High' ? 'text-danger' : 'text-warning';
+    
+    // Risk gauge
+    const riskScore = risk.risk_score || 5;
+    let gaugeHtml = '';
+    for (let i = 1; i <= 10; i++) {
+        const cls = i <= riskScore ? 'active' : '';
+        const level = i <= 3 ? 'low' : i <= 7 ? 'med' : 'high';
+        gaugeHtml += `<div class="risk-bar ${cls} ${level}"></div>`;
+    }
+    document.getElementById('riskGauge').innerHTML = gaugeHtml;
+    
+    // Expected Return
+    const expRet = ret.expected_annual_return || 0;
+    document.getElementById('predExpReturn').textContent = (expRet >= 0 ? '+' : '') + expRet.toFixed(1) + '%';
+    document.getElementById('predSharpe').textContent = (risk.sharpe_ratio || 0).toFixed(3);
+    document.getElementById('predVolatility').textContent = (risk.annual_volatility || 0).toFixed(2) + '%';
+    document.getElementById('predBeta').textContent = (risk.beta || 1).toFixed(3);
+    
+    // Model metrics
+    let metricsHtml = `
+        <table class="data-table">
+            <tr><td style="color: var(--text-muted);">Direction Accuracy</td><td class="text-right font-bold text-mono">${metrics.direction_accuracy || 'N/A'}%</td></tr>
+            <tr><td style="color: var(--text-muted);">Magnitude R²</td><td class="text-right font-bold text-mono">${metrics.magnitude_r2 || 'N/A'}</td></tr>
+            <tr><td style="color: var(--text-muted);">RMSE</td><td class="text-right font-bold text-mono">${metrics.magnitude_rmse || 'N/A'}</td></tr>
+            <tr><td style="color: var(--text-muted);">Training Samples</td><td class="text-right font-bold text-mono">${metrics.training_samples || 'N/A'}</td></tr>
+            <tr><td style="color: var(--text-muted);">Test Samples</td><td class="text-right font-bold text-mono">${metrics.test_samples || 'N/A'}</td></tr>
+            <tr><td style="color: var(--text-muted);">Model</td><td class="text-right font-bold">Random Forest (200 trees)</td></tr>
+        </table>`;
+    document.getElementById('modelMetrics').innerHTML = metricsHtml;
+}
+
+function getRecommendations() {
+    const amount = document.getElementById('recAmount').value;
+    
+    document.getElementById('recLoading').classList.remove('hidden');
+    document.getElementById('recResults').classList.add('hidden');
+    document.getElementById('recBtn').disabled = true;
+    
+    fetch('/api/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: amount || null })
+    })
+    .then(r => r.json())
+    .then(data => {
+        document.getElementById('recLoading').classList.add('hidden');
+        document.getElementById('recBtn').disabled = false;
+        
+        if (!data.success) {
+            alert(data.error || 'Failed to get recommendations');
+            return;
+        }
+        
+        displayRecommendations(data.data);
+    })
+    .catch(err => {
+        document.getElementById('recLoading').classList.add('hidden');
+        document.getElementById('recBtn').disabled = false;
+        alert('Error: ' + err.message);
+    });
+}
+
+function displayRecommendations(data) {
+    document.getElementById('recResults').classList.remove('hidden');
+    
+    const totalAmount = data.total_amount || 0;
+    
+    let html = `
+        <div class="glass-card mb-24" style="border-color: rgba(99, 102, 241, 0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="font-size: 1.1rem;">Investment Plan for ₹${totalAmount.toLocaleString('en-IN')}</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px;">
+                        Risk Profile: <strong style="text-transform: capitalize;">${data.risk_profile}</strong> •
+                        Horizon: <strong style="text-transform: capitalize;">${data.investment_horizon}</strong>
+                    </p>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 1.5rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-primary-light);">₹${totalAmount.toLocaleString('en-IN')}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Total Investment</div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    const catIcons = { stocks: '📈', mutual_funds: '📊', gold: '🪙', bonds: '🏛️', fd: '🏦' };
+    const catColors = { stocks: '#6366f1', mutual_funds: '#06b6d4', gold: '#f59e0b', bonds: '#10b981', fd: '#a855f7' };
+    
+    for (const [category, catData] of Object.entries(data.categories || {})) {
+        html += `
+            <div class="glass-card mb-24">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">${catIcons[category] || '📌'}</span>
+                        ${catData.name}
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 700; font-family: var(--font-mono); color: ${catColors[category]};">₹${catData.amount?.toLocaleString('en-IN')}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">${catData.allocation_pct}% allocation</div>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+        `;
+        
+        (catData.recommendations || []).forEach(rec => {
+            if (category === 'stocks') {
+                html += renderStockCard(rec);
+            } else if (category === 'mutual_funds') {
+                html += renderMFCard(rec);
+            } else if (category === 'gold') {
+                html += renderMetalCard(rec);
+            } else if (category === 'bonds') {
+                html += renderBondCard(rec);
+            } else if (category === 'fd') {
+                html += renderFDCard(rec);
+            }
+        });
+        
+        if (!catData.recommendations || catData.recommendations.length === 0) {
+            html += `<div style="padding: 20px; color: var(--text-muted); font-size: 0.85rem;">No specific recommendations available for this category.</div>`;
+        }
+        
+        html += `</div></div>`;
+    }
+    
+    document.getElementById('recResults').innerHTML = html;
+}
+
+function renderStockCard(rec) {
+    const actionClass = rec.action === 'BUY' ? 'buy' : rec.action === 'SELL' ? 'sell' : 'hold';
+    return `
+        <div class="rec-card">
+            <div class="rec-header">
+                <div>
+                    <div class="rec-symbol">${rec.symbol || ''}</div>
+                    <div class="rec-name">${rec.name}</div>
+                </div>
+                ${rec.action ? `<span class="rec-badge ${actionClass}">${rec.action}</span>` : ''}
+            </div>
+            <div style="font-size: 1.1rem; font-weight: 700; font-family: var(--font-mono); color: var(--accent-primary-light);">
+                ₹${rec.amount?.toLocaleString('en-IN')}
+            </div>
+            <div class="rec-metrics">
+                ${rec.risk_level ? `<div class="rec-metric"><div class="metric-value">${rec.risk_level}</div><div class="metric-label">Risk</div></div>` : ''}
+                ${rec.score ? `<div class="rec-metric"><div class="metric-value">${rec.score}</div><div class="metric-label">ML Score</div></div>` : ''}
+                ${rec.weight ? `<div class="rec-metric"><div class="metric-value">${rec.weight}%</div><div class="metric-label">Weight</div></div>` : ''}
+            </div>
+        </div>`;
+}
+
+function renderMFCard(rec) {
+    const actionClass = rec.action === 'SIP' ? 'buy' : 'hold';
+    return `
+        <div class="rec-card">
+            <div class="rec-header">
+                <div>
+                    <div class="rec-symbol">${rec.name}</div>
+                    <div class="rec-name">${rec.category} • ${rec.type}</div>
+                </div>
+                <span class="rec-badge ${actionClass}">${rec.action || 'SIP'}</span>
+            </div>
+            <div style="font-size: 1.1rem; font-weight: 700; font-family: var(--font-mono); color: var(--accent-primary-light);">
+                ₹${rec.amount?.toLocaleString('en-IN')}
+            </div>
+            <div class="rec-metrics">
+                <div class="rec-metric"><div class="metric-value text-success">${rec.returns_1y}%</div><div class="metric-label">1Y Return</div></div>
+                <div class="rec-metric"><div class="metric-value text-success">${rec.returns_3y}%</div><div class="metric-label">3Y Return</div></div>
+                <div class="rec-metric"><div class="metric-value">${rec.expense_ratio}%</div><div class="metric-label">Expense</div></div>
+            </div>
+            <div style="margin-top: 10px; font-size: 0.75rem; color: var(--text-muted);">
+                🏢 ${rec.amc} • Min SIP: ₹${rec.min_sip}
+            </div>
+            ${rec.note ? `<div style="margin-top: 6px; font-size: 0.75rem; color: var(--text-secondary);">💡 ${rec.note}</div>` : ''}
+        </div>`;
+}
+
+function renderMetalCard(rec) {
+    return `
+        <div class="rec-card">
+            <div class="rec-header">
+                <div>
+                    <div class="rec-symbol">${rec.name}</div>
+                    <div class="rec-name">${rec.type}${rec.purity ? ' • Purity: ' + rec.purity : ''}</div>
+                </div>
+                <span class="rec-badge hold">${rec.risk_level}</span>
+            </div>
+            <div style="font-size: 1.1rem; font-weight: 700; font-family: var(--font-mono); color: var(--accent-primary-light);">
+                ₹${rec.amount?.toLocaleString('en-IN')}
+            </div>
+            <div class="rec-metrics">
+                <div class="rec-metric"><div class="metric-value text-success">${rec.returns_1y}%</div><div class="metric-label">1Y Return</div></div>
+                <div class="rec-metric"><div class="metric-value text-success">${rec.returns_3y}%</div><div class="metric-label">3Y Return</div></div>
+                <div class="rec-metric"><div class="metric-value">${rec.weight}%</div><div class="metric-label">Weight</div></div>
+            </div>
+            <div style="margin-top: 10px; font-size: 0.75rem; color: var(--text-muted);">
+                🏢 ${rec.provider}
+            </div>
+            ${rec.storage ? `<div style="margin-top: 4px; font-size: 0.75rem; color: var(--text-muted);">📦 Storage: ${rec.storage}</div>` : ''}
+            ${rec.note ? `<div style="margin-top: 6px; font-size: 0.75rem; color: var(--text-secondary);">💡 ${rec.note}</div>` : ''}
+        </div>`;
+}
+
+function renderBondCard(rec) {
+    return `
+        <div class="rec-card">
+            <div class="rec-header">
+                <div>
+                    <div class="rec-symbol">${rec.name}</div>
+                    <div class="rec-name">${rec.type} Bond • ${rec.tenure}</div>
+                </div>
+                <span class="rec-badge buy">${rec.yield}% YTM</span>
+            </div>
+            <div style="font-size: 1.1rem; font-weight: 700; font-family: var(--font-mono); color: var(--accent-primary-light);">
+                ₹${rec.amount?.toLocaleString('en-IN')}
+            </div>
+            <div class="rec-metrics">
+                <div class="rec-metric"><div class="metric-value text-success">${rec.yield}%</div><div class="metric-label">Yield</div></div>
+                <div class="rec-metric"><div class="metric-value">${rec.risk_level}</div><div class="metric-label">Risk</div></div>
+                <div class="rec-metric"><div class="metric-value">${rec.weight}%</div><div class="metric-label">Weight</div></div>
+            </div>
+            <div style="margin-top: 10px; font-size: 0.75rem; color: var(--text-muted);">
+                📋 Tax: ${rec.taxable} • Min: ₹${rec.min_investment?.toLocaleString('en-IN')}
+            </div>
+            ${rec.note ? `<div style="margin-top: 6px; font-size: 0.75rem; color: var(--text-secondary);">💡 ${rec.note}</div>` : ''}
+        </div>`;
+}
+
+function renderFDCard(rec) {
+    return `
+        <div class="rec-card">
+            <div class="rec-header">
+                <div>
+                    <div class="rec-symbol">${rec.name}</div>
+                    <div class="rec-name">${rec.tenure} Tenure</div>
+                </div>
+                <span class="rec-badge buy">${rec.rate}% p.a.</span>
+            </div>
+            <div style="font-size: 1.1rem; font-weight: 700; font-family: var(--font-mono); color: var(--accent-primary-light);">
+                ₹${rec.amount?.toLocaleString('en-IN')}
+            </div>
+            <div class="rec-metrics">
+                <div class="rec-metric"><div class="metric-value text-success">${rec.rate}%</div><div class="metric-label">Interest</div></div>
+                <div class="rec-metric"><div class="metric-value text-accent">₹${rec.maturity_amount?.toLocaleString('en-IN')}</div><div class="metric-label">Maturity</div></div>
+                <div class="rec-metric"><div class="metric-value">${rec.weight}%</div><div class="metric-label">Weight</div></div>
+            </div>
+            ${rec.senior_extra > 0 ? `<div style="margin-top: 10px; font-size: 0.75rem; color: var(--accent-success);">👴 Senior Citizen Extra: +${rec.senior_extra}% p.a.</div>` : ''}
+            ${rec.insured ? `<div style="margin-top: 4px; font-size: 0.75rem; color: var(--accent-success);">✅ ${rec.insured}</div>` : ''}
+            ${rec.note ? `<div style="margin-top: 6px; font-size: 0.75rem; color: var(--text-secondary);">💡 ${rec.note}</div>` : ''}
+        </div>`;
+}
+
+function loadPredictionHistory() {
+    fetch('/api/predictions/history')
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success || !data.data.length) {
+                document.getElementById('predHistory').innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 40px;">No predictions yet. Run your first prediction above!</p>';
+                return;
+            }
+            
+            let html = '<table class="data-table"><thead><tr><th>Date</th><th>Symbol</th><th>Direction</th><th>Predicted</th><th>Confidence</th></tr></thead><tbody>';
+            
+            data.data.forEach(p => {
+                const dirClass = p.direction === 'UP' ? 'text-success' : 'text-danger';
+                const arrow = p.direction === 'UP' ? '▲' : '▼';
+                html += `
+                    <tr>
+                        <td style="color: var(--text-muted); font-size: 0.8rem;">${new Date(p.created_at).toLocaleString('en-IN')}</td>
+                        <td class="font-bold text-mono">${p.symbol}</td>
+                        <td class="${dirClass} font-bold">${arrow} ${p.direction}</td>
+                        <td class="text-mono">₹${p.predicted_value?.toLocaleString('en-IN') || '--'}</td>
+                        <td class="text-mono">${p.confidence?.toFixed(1) || '--'}%</td>
+                    </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('predHistory').innerHTML = html;
+        })
+        .catch(() => {
+            document.getElementById('predHistory').innerHTML = '<p style="color: var(--text-muted);">Failed to load history</p>';
+        });
+}
+
+// Enter key to predict
+document.getElementById('predictSymbol')?.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') runPrediction();
+});
+</script>
+{% endblock %}

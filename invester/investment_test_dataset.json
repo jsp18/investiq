@@ -1,0 +1,1157 @@
+[
+  {
+    "case_id": 1,
+    "input_profile": {
+      "age": 61,
+      "monthly_income": 172072,
+      "investment_amount": 10000,
+      "risk_tolerance": "very_aggressive",
+      "investment_horizon": "medium",
+      "experience_level": "beginner",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 55,
+      "mutual_funds": 35,
+      "gold": 5,
+      "bonds": 3,
+      "fd": 2
+    },
+    "total_amount": 10000.0,
+    "risk_profile_assigned": "very_aggressive"
+  },
+  {
+    "case_id": 2,
+    "input_profile": {
+      "age": 49,
+      "monthly_income": 230662,
+      "investment_amount": 500000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "long",
+      "experience_level": "beginner",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 47.6,
+      "mutual_funds": 42.9,
+      "gold": 4.8,
+      "bonds": 4.8,
+      "fd": 0.0
+    },
+    "total_amount": 500000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 3,
+    "input_profile": {
+      "age": 46,
+      "monthly_income": 300663,
+      "investment_amount": 2500000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "short",
+      "experience_level": "intermediate",
+      "goals": "wealth_growth"
+    },
+    "output_allocation": {
+      "stocks": 25,
+      "mutual_funds": 30,
+      "gold": 5,
+      "bonds": 20,
+      "fd": 20
+    },
+    "total_amount": 2500000.0,
+    "risk_profile_assigned": "moderate"
+  },
+  {
+    "case_id": 4,
+    "input_profile": {
+      "age": 57,
+      "monthly_income": 188302,
+      "investment_amount": 10000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "long",
+      "experience_level": "beginner",
+      "goals": "wealth_growth"
+    },
+    "output_allocation": {
+      "stocks": 45,
+      "mutual_funds": 40,
+      "gold": 5,
+      "bonds": 10,
+      "fd": 0
+    },
+    "total_amount": 10000.0,
+    "risk_profile_assigned": "moderate"
+  },
+  {
+    "case_id": 5,
+    "input_profile": {
+      "age": 55,
+      "monthly_income": 445718,
+      "investment_amount": 1000000,
+      "risk_tolerance": "very_aggressive",
+      "investment_horizon": "long",
+      "experience_level": "expert",
+      "goals": "wealth_growth"
+    },
+    "output_allocation": {
+      "stocks": 70,
+      "mutual_funds": 30,
+      "gold": 0,
+      "bonds": 0,
+      "fd": 0
+    },
+    "total_amount": 1000000.0,
+    "risk_profile_assigned": "very_aggressive"
+  },
+  {
+    "case_id": 6,
+    "input_profile": {
+      "age": 67,
+      "monthly_income": 448983,
+      "investment_amount": 50000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "long",
+      "experience_level": "intermediate",
+      "goals": "tax_saving"
+    },
+    "output_allocation": {
+      "stocks": 25,
+      "mutual_funds": 40,
+      "gold": 15,
+      "bonds": 20,
+      "fd": 0
+    },
+    "total_amount": 50000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 7,
+    "input_profile": {
+      "age": 43,
+      "monthly_income": 407437,
+      "investment_amount": 2500000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "short",
+      "experience_level": "beginner",
+      "goals": "wealth_growth"
+    },
+    "output_allocation": {
+      "stocks": 9.5,
+      "mutual_funds": 28.6,
+      "gold": 9.5,
+      "bonds": 28.6,
+      "fd": 23.8
+    },
+    "total_amount": 2500000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 8,
+    "input_profile": {
+      "age": 24,
+      "monthly_income": 341784,
+      "investment_amount": 1000000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "long",
+      "experience_level": "intermediate",
+      "goals": "wealth_growth"
+    },
+    "output_allocation": {
+      "stocks": 35,
+      "mutual_funds": 30,
+      "gold": 10,
+      "bonds": 20,
+      "fd": 5
+    },
+    "total_amount": 1000000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 9,
+    "input_profile": {
+      "age": 41,
+      "monthly_income": 448727,
+      "investment_amount": 10000,
+      "risk_tolerance": "very_aggressive",
+      "investment_horizon": "short",
+      "experience_level": "intermediate",
+      "goals": "income"
+    },
+    "output_allocation": {
+      "stocks": 35,
+      "mutual_funds": 25,
+      "gold": 5,
+      "bonds": 18,
+      "fd": 17
+    },
+    "total_amount": 10000.0,
+    "risk_profile_assigned": "very_aggressive"
+  },
+  {
+    "case_id": 10,
+    "input_profile": {
+      "age": 52,
+      "monthly_income": 411780,
+      "investment_amount": 50000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "short",
+      "experience_level": "beginner",
+      "goals": "income"
+    },
+    "output_allocation": {
+      "stocks": 9.1,
+      "mutual_funds": 31.8,
+      "gold": 9.1,
+      "bonds": 27.3,
+      "fd": 22.7
+    },
+    "total_amount": 50000.0,
+    "risk_profile_assigned": "moderate"
+  },
+  {
+    "case_id": 11,
+    "input_profile": {
+      "age": 57,
+      "monthly_income": 143070,
+      "investment_amount": 250000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "short",
+      "experience_level": "beginner",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 10,
+      "mutual_funds": 40,
+      "gold": 10,
+      "bonds": 20,
+      "fd": 20
+    },
+    "total_amount": 250000.0,
+    "risk_profile_assigned": "moderate"
+  },
+  {
+    "case_id": 12,
+    "input_profile": {
+      "age": 69,
+      "monthly_income": 274072,
+      "investment_amount": 2500000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "short",
+      "experience_level": "intermediate",
+      "goals": "income"
+    },
+    "output_allocation": {
+      "stocks": 9.1,
+      "mutual_funds": 22.7,
+      "gold": 13.6,
+      "bonds": 31.8,
+      "fd": 22.7
+    },
+    "total_amount": 2500000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 13,
+    "input_profile": {
+      "age": 53,
+      "monthly_income": 494787,
+      "investment_amount": 10000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "short",
+      "experience_level": "intermediate",
+      "goals": "income"
+    },
+    "output_allocation": {
+      "stocks": 20,
+      "mutual_funds": 30,
+      "gold": 5,
+      "bonds": 25,
+      "fd": 20
+    },
+    "total_amount": 10000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 14,
+    "input_profile": {
+      "age": 23,
+      "monthly_income": 76054,
+      "investment_amount": 50000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "medium",
+      "experience_level": "beginner",
+      "goals": "tax_saving"
+    },
+    "output_allocation": {
+      "stocks": 25,
+      "mutual_funds": 45,
+      "gold": 10,
+      "bonds": 15,
+      "fd": 5
+    },
+    "total_amount": 50000.0,
+    "risk_profile_assigned": "moderate"
+  },
+  {
+    "case_id": 15,
+    "input_profile": {
+      "age": 70,
+      "monthly_income": 48284,
+      "investment_amount": 10000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "short",
+      "experience_level": "intermediate",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 9.1,
+      "mutual_funds": 27.3,
+      "gold": 13.6,
+      "bonds": 27.3,
+      "fd": 22.7
+    },
+    "total_amount": 10000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 16,
+    "input_profile": {
+      "age": 64,
+      "monthly_income": 47192,
+      "investment_amount": 50000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "medium",
+      "experience_level": "intermediate",
+      "goals": "tax_saving"
+    },
+    "output_allocation": {
+      "stocks": 45,
+      "mutual_funds": 40,
+      "gold": 5,
+      "bonds": 10,
+      "fd": 0
+    },
+    "total_amount": 50000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 17,
+    "input_profile": {
+      "age": 64,
+      "monthly_income": 489529,
+      "investment_amount": 250000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "short",
+      "experience_level": "intermediate",
+      "goals": "income"
+    },
+    "output_allocation": {
+      "stocks": 20,
+      "mutual_funds": 30,
+      "gold": 5,
+      "bonds": 25,
+      "fd": 20
+    },
+    "total_amount": 250000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 18,
+    "input_profile": {
+      "age": 70,
+      "monthly_income": 400334,
+      "investment_amount": 1000000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "medium",
+      "experience_level": "beginner",
+      "goals": "tax_saving"
+    },
+    "output_allocation": {
+      "stocks": 10,
+      "mutual_funds": 40,
+      "gold": 15,
+      "bonds": 25,
+      "fd": 10
+    },
+    "total_amount": 1000000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 19,
+    "input_profile": {
+      "age": 57,
+      "monthly_income": 185581,
+      "investment_amount": 100000,
+      "risk_tolerance": "very_aggressive",
+      "investment_horizon": "short",
+      "experience_level": "expert",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 45,
+      "mutual_funds": 30,
+      "gold": 5,
+      "bonds": 8,
+      "fd": 12
+    },
+    "total_amount": 100000.0,
+    "risk_profile_assigned": "very_aggressive"
+  },
+  {
+    "case_id": 20,
+    "input_profile": {
+      "age": 27,
+      "monthly_income": 353582,
+      "investment_amount": 50000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "medium",
+      "experience_level": "expert",
+      "goals": "tax_saving"
+    },
+    "output_allocation": {
+      "stocks": 30,
+      "mutual_funds": 40,
+      "gold": 10,
+      "bonds": 15,
+      "fd": 5
+    },
+    "total_amount": 50000.0,
+    "risk_profile_assigned": "moderate"
+  },
+  {
+    "case_id": 21,
+    "input_profile": {
+      "age": 24,
+      "monthly_income": 424311,
+      "investment_amount": 50000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "medium",
+      "experience_level": "expert",
+      "goals": "income"
+    },
+    "output_allocation": {
+      "stocks": 20,
+      "mutual_funds": 30,
+      "gold": 10,
+      "bonds": 25,
+      "fd": 15
+    },
+    "total_amount": 50000.0,
+    "risk_profile_assigned": "moderate"
+  },
+  {
+    "case_id": 22,
+    "input_profile": {
+      "age": 23,
+      "monthly_income": 182562,
+      "investment_amount": 250000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "long",
+      "experience_level": "expert",
+      "goals": "wealth_growth"
+    },
+    "output_allocation": {
+      "stocks": 61.9,
+      "mutual_funds": 33.3,
+      "gold": 0.0,
+      "bonds": 4.8,
+      "fd": 0.0
+    },
+    "total_amount": 250000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 23,
+    "input_profile": {
+      "age": 20,
+      "monthly_income": 263556,
+      "investment_amount": 1000000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "short",
+      "experience_level": "beginner",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 10,
+      "mutual_funds": 40,
+      "gold": 10,
+      "bonds": 20,
+      "fd": 20
+    },
+    "total_amount": 1000000.0,
+    "risk_profile_assigned": "moderate"
+  },
+  {
+    "case_id": 24,
+    "input_profile": {
+      "age": 35,
+      "monthly_income": 391540,
+      "investment_amount": 50000,
+      "risk_tolerance": "very_aggressive",
+      "investment_horizon": "medium",
+      "experience_level": "intermediate",
+      "goals": "tax_saving"
+    },
+    "output_allocation": {
+      "stocks": 58.3,
+      "mutual_funds": 34.0,
+      "gold": 4.9,
+      "bonds": 2.9,
+      "fd": 0.0
+    },
+    "total_amount": 50000.0,
+    "risk_profile_assigned": "very_aggressive"
+  },
+  {
+    "case_id": 25,
+    "input_profile": {
+      "age": 25,
+      "monthly_income": 303823,
+      "investment_amount": 50000,
+      "risk_tolerance": "very_aggressive",
+      "investment_horizon": "short",
+      "experience_level": "beginner",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 40,
+      "mutual_funds": 35,
+      "gold": 5,
+      "bonds": 8,
+      "fd": 12
+    },
+    "total_amount": 50000.0,
+    "risk_profile_assigned": "very_aggressive"
+  },
+  {
+    "case_id": 26,
+    "input_profile": {
+      "age": 44,
+      "monthly_income": 478674,
+      "investment_amount": 50000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "medium",
+      "experience_level": "beginner",
+      "goals": "tax_saving"
+    },
+    "output_allocation": {
+      "stocks": 25,
+      "mutual_funds": 45,
+      "gold": 10,
+      "bonds": 15,
+      "fd": 5
+    },
+    "total_amount": 50000.0,
+    "risk_profile_assigned": "moderate"
+  },
+  {
+    "case_id": 27,
+    "input_profile": {
+      "age": 42,
+      "monthly_income": 177394,
+      "investment_amount": 100000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "long",
+      "experience_level": "intermediate",
+      "goals": "income"
+    },
+    "output_allocation": {
+      "stocks": 42.9,
+      "mutual_funds": 33.3,
+      "gold": 4.8,
+      "bonds": 14.3,
+      "fd": 4.8
+    },
+    "total_amount": 100000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 28,
+    "input_profile": {
+      "age": 54,
+      "monthly_income": 229132,
+      "investment_amount": 1000000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "short",
+      "experience_level": "intermediate",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 15,
+      "mutual_funds": 35,
+      "gold": 10,
+      "bonds": 20,
+      "fd": 20
+    },
+    "total_amount": 1000000.0,
+    "risk_profile_assigned": "moderate"
+  },
+  {
+    "case_id": 29,
+    "input_profile": {
+      "age": 20,
+      "monthly_income": 55211,
+      "investment_amount": 500000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "short",
+      "experience_level": "expert",
+      "goals": "tax_saving"
+    },
+    "output_allocation": {
+      "stocks": 30,
+      "mutual_funds": 40,
+      "gold": 5,
+      "bonds": 15,
+      "fd": 10
+    },
+    "total_amount": 500000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 30,
+    "input_profile": {
+      "age": 28,
+      "monthly_income": 390903,
+      "investment_amount": 500000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "medium",
+      "experience_level": "beginner",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 10,
+      "mutual_funds": 35,
+      "gold": 15,
+      "bonds": 25,
+      "fd": 15
+    },
+    "total_amount": 500000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 31,
+    "input_profile": {
+      "age": 67,
+      "monthly_income": 332361,
+      "investment_amount": 100000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "short",
+      "experience_level": "intermediate",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 30,
+      "mutual_funds": 35,
+      "gold": 5,
+      "bonds": 15,
+      "fd": 15
+    },
+    "total_amount": 100000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 32,
+    "input_profile": {
+      "age": 70,
+      "monthly_income": 402484,
+      "investment_amount": 100000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "long",
+      "experience_level": "beginner",
+      "goals": "income"
+    },
+    "output_allocation": {
+      "stocks": 38.1,
+      "mutual_funds": 38.1,
+      "gold": 4.8,
+      "bonds": 14.3,
+      "fd": 4.8
+    },
+    "total_amount": 100000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 33,
+    "input_profile": {
+      "age": 43,
+      "monthly_income": 415668,
+      "investment_amount": 1000000,
+      "risk_tolerance": "very_aggressive",
+      "investment_horizon": "short",
+      "experience_level": "intermediate",
+      "goals": "tax_saving"
+    },
+    "output_allocation": {
+      "stocks": 45,
+      "mutual_funds": 35,
+      "gold": 5,
+      "bonds": 8,
+      "fd": 7
+    },
+    "total_amount": 1000000.0,
+    "risk_profile_assigned": "very_aggressive"
+  },
+  {
+    "case_id": 34,
+    "input_profile": {
+      "age": 50,
+      "monthly_income": 111994,
+      "investment_amount": 1000000,
+      "risk_tolerance": "very_aggressive",
+      "investment_horizon": "medium",
+      "experience_level": "intermediate",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 60,
+      "mutual_funds": 30,
+      "gold": 5,
+      "bonds": 3,
+      "fd": 2
+    },
+    "total_amount": 1000000.0,
+    "risk_profile_assigned": "very_aggressive"
+  },
+  {
+    "case_id": 35,
+    "input_profile": {
+      "age": 52,
+      "monthly_income": 98873,
+      "investment_amount": 10000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "long",
+      "experience_level": "intermediate",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 25,
+      "mutual_funds": 35,
+      "gold": 15,
+      "bonds": 20,
+      "fd": 5
+    },
+    "total_amount": 10000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 36,
+    "input_profile": {
+      "age": 58,
+      "monthly_income": 349763,
+      "investment_amount": 2500000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "medium",
+      "experience_level": "expert",
+      "goals": "wealth_growth"
+    },
+    "output_allocation": {
+      "stocks": 55,
+      "mutual_funds": 30,
+      "gold": 0,
+      "bonds": 10,
+      "fd": 5
+    },
+    "total_amount": 2500000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 37,
+    "input_profile": {
+      "age": 35,
+      "monthly_income": 409884,
+      "investment_amount": 10000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "long",
+      "experience_level": "intermediate",
+      "goals": "income"
+    },
+    "output_allocation": {
+      "stocks": 42.9,
+      "mutual_funds": 33.3,
+      "gold": 4.8,
+      "bonds": 14.3,
+      "fd": 4.8
+    },
+    "total_amount": 10000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 38,
+    "input_profile": {
+      "age": 34,
+      "monthly_income": 454568,
+      "investment_amount": 1000000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "medium",
+      "experience_level": "beginner",
+      "goals": "tax_saving"
+    },
+    "output_allocation": {
+      "stocks": 40,
+      "mutual_funds": 45,
+      "gold": 5,
+      "bonds": 10,
+      "fd": 0
+    },
+    "total_amount": 1000000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 39,
+    "input_profile": {
+      "age": 47,
+      "monthly_income": 58690,
+      "investment_amount": 50000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "medium",
+      "experience_level": "intermediate",
+      "goals": "wealth_growth"
+    },
+    "output_allocation": {
+      "stocks": 25,
+      "mutual_funds": 25,
+      "gold": 10,
+      "bonds": 25,
+      "fd": 15
+    },
+    "total_amount": 50000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 40,
+    "input_profile": {
+      "age": 40,
+      "monthly_income": 259970,
+      "investment_amount": 100000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "long",
+      "experience_level": "intermediate",
+      "goals": "wealth_growth"
+    },
+    "output_allocation": {
+      "stocks": 61.9,
+      "mutual_funds": 33.3,
+      "gold": 0.0,
+      "bonds": 4.8,
+      "fd": 0.0
+    },
+    "total_amount": 100000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 41,
+    "input_profile": {
+      "age": 52,
+      "monthly_income": 145272,
+      "investment_amount": 100000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "medium",
+      "experience_level": "intermediate",
+      "goals": "income"
+    },
+    "output_allocation": {
+      "stocks": 35,
+      "mutual_funds": 30,
+      "gold": 5,
+      "bonds": 20,
+      "fd": 10
+    },
+    "total_amount": 100000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 42,
+    "input_profile": {
+      "age": 28,
+      "monthly_income": 412304,
+      "investment_amount": 100000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "long",
+      "experience_level": "beginner",
+      "goals": "wealth_growth"
+    },
+    "output_allocation": {
+      "stocks": 57.1,
+      "mutual_funds": 38.1,
+      "gold": 0.0,
+      "bonds": 4.8,
+      "fd": 0.0
+    },
+    "total_amount": 100000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 43,
+    "input_profile": {
+      "age": 41,
+      "monthly_income": 90495,
+      "investment_amount": 2500000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "medium",
+      "experience_level": "beginner",
+      "goals": "tax_saving"
+    },
+    "output_allocation": {
+      "stocks": 25,
+      "mutual_funds": 45,
+      "gold": 10,
+      "bonds": 15,
+      "fd": 5
+    },
+    "total_amount": 2500000.0,
+    "risk_profile_assigned": "moderate"
+  },
+  {
+    "case_id": 44,
+    "input_profile": {
+      "age": 59,
+      "monthly_income": 379925,
+      "investment_amount": 10000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "long",
+      "experience_level": "expert",
+      "goals": "income"
+    },
+    "output_allocation": {
+      "stocks": 15,
+      "mutual_funds": 30,
+      "gold": 15,
+      "bonds": 30,
+      "fd": 10
+    },
+    "total_amount": 10000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 45,
+    "input_profile": {
+      "age": 28,
+      "monthly_income": 489224,
+      "investment_amount": 1000000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "long",
+      "experience_level": "beginner",
+      "goals": "tax_saving"
+    },
+    "output_allocation": {
+      "stocks": 35,
+      "mutual_funds": 45,
+      "gold": 10,
+      "bonds": 10,
+      "fd": 0
+    },
+    "total_amount": 1000000.0,
+    "risk_profile_assigned": "moderate"
+  },
+  {
+    "case_id": 46,
+    "input_profile": {
+      "age": 23,
+      "monthly_income": 180357,
+      "investment_amount": 100000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "long",
+      "experience_level": "intermediate",
+      "goals": "wealth_growth"
+    },
+    "output_allocation": {
+      "stocks": 35,
+      "mutual_funds": 30,
+      "gold": 10,
+      "bonds": 20,
+      "fd": 5
+    },
+    "total_amount": 100000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 47,
+    "input_profile": {
+      "age": 46,
+      "monthly_income": 80594,
+      "investment_amount": 1000000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "short",
+      "experience_level": "beginner",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 25,
+      "mutual_funds": 40,
+      "gold": 5,
+      "bonds": 15,
+      "fd": 15
+    },
+    "total_amount": 1000000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 48,
+    "input_profile": {
+      "age": 38,
+      "monthly_income": 124530,
+      "investment_amount": 50000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "short",
+      "experience_level": "expert",
+      "goals": "income"
+    },
+    "output_allocation": {
+      "stocks": 9.1,
+      "mutual_funds": 22.7,
+      "gold": 13.6,
+      "bonds": 31.8,
+      "fd": 22.7
+    },
+    "total_amount": 50000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 49,
+    "input_profile": {
+      "age": 54,
+      "monthly_income": 112701,
+      "investment_amount": 250000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "short",
+      "experience_level": "intermediate",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 9.1,
+      "mutual_funds": 27.3,
+      "gold": 13.6,
+      "bonds": 27.3,
+      "fd": 22.7
+    },
+    "total_amount": 250000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 50,
+    "input_profile": {
+      "age": 59,
+      "monthly_income": 307524,
+      "investment_amount": 2500000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "short",
+      "experience_level": "expert",
+      "goals": "wealth_growth"
+    },
+    "output_allocation": {
+      "stocks": 25,
+      "mutual_funds": 30,
+      "gold": 5,
+      "bonds": 20,
+      "fd": 20
+    },
+    "total_amount": 2500000.0,
+    "risk_profile_assigned": "moderate"
+  },
+  {
+    "case_id": 51,
+    "input_profile": {
+      "age": 70,
+      "monthly_income": 143301,
+      "investment_amount": 250000,
+      "risk_tolerance": "very_aggressive",
+      "investment_horizon": "medium",
+      "experience_level": "beginner",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 55,
+      "mutual_funds": 35,
+      "gold": 5,
+      "bonds": 3,
+      "fd": 2
+    },
+    "total_amount": 250000.0,
+    "risk_profile_assigned": "very_aggressive"
+  },
+  {
+    "case_id": 52,
+    "input_profile": {
+      "age": 60,
+      "monthly_income": 242564,
+      "investment_amount": 10000,
+      "risk_tolerance": "conservative",
+      "investment_horizon": "short",
+      "experience_level": "beginner",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 8.7,
+      "mutual_funds": 30.4,
+      "gold": 13.0,
+      "bonds": 26.1,
+      "fd": 21.7
+    },
+    "total_amount": 10000.0,
+    "risk_profile_assigned": "conservative"
+  },
+  {
+    "case_id": 53,
+    "input_profile": {
+      "age": 38,
+      "monthly_income": 184824,
+      "investment_amount": 250000,
+      "risk_tolerance": "aggressive",
+      "investment_horizon": "short",
+      "experience_level": "intermediate",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 30,
+      "mutual_funds": 35,
+      "gold": 5,
+      "bonds": 15,
+      "fd": 15
+    },
+    "total_amount": 250000.0,
+    "risk_profile_assigned": "aggressive"
+  },
+  {
+    "case_id": 54,
+    "input_profile": {
+      "age": 63,
+      "monthly_income": 202172,
+      "investment_amount": 250000,
+      "risk_tolerance": "very_aggressive",
+      "investment_horizon": "medium",
+      "experience_level": "beginner",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 55,
+      "mutual_funds": 35,
+      "gold": 5,
+      "bonds": 3,
+      "fd": 2
+    },
+    "total_amount": 250000.0,
+    "risk_profile_assigned": "very_aggressive"
+  },
+  {
+    "case_id": 55,
+    "input_profile": {
+      "age": 24,
+      "monthly_income": 97876,
+      "investment_amount": 2500000,
+      "risk_tolerance": "moderate",
+      "investment_horizon": "long",
+      "experience_level": "beginner",
+      "goals": "retirement"
+    },
+    "output_allocation": {
+      "stocks": 35,
+      "mutual_funds": 45,
+      "gold": 10,
+      "bonds": 10,
+      "fd": 0
+    },
+    "total_amount": 2500000.0,
+    "risk_profile_assigned": "moderate"
+  }
+]

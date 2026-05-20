@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Login — InvestIQ{% endblock %}
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <h1>📊 InvestIQ</h1>
+                <p>AI-Powered Personal Investing Assistant</p>
+            </div>
+
+            {% if error %}
+            <div class="auth-error" id="loginError">{{ error }}</div>
+            {% endif %}
+
+            <form class="auth-form" id="loginForm" method="POST" action="{{ url_for('auth.login') }}">
+                <div class="form-group">
+                    <label for="username">Username or Email</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    Sign In →
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Create Account</a></p>
+            </div>
+        </div>
+
+        <div class="disclaimer" style="margin-top: 16px; font-size: 0.75rem;">
+            <span class="warn-icon">⚠️</span>
+            <span>InvestIQ provides ML-based investment suggestions for educational purposes only. This is not financial advice. Always consult a SEBI-registered financial advisor.</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

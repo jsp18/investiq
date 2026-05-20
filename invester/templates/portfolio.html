@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+{% block title %}Portfolio Optimizer — InvestIQ{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="page-header">
+        <h2>💼 Portfolio Optimizer</h2>
+        <p>Optimize your portfolio allocation using Modern Portfolio Theory (MPT) — maximizing the Sharpe Ratio</p>
+    </div>
+
+    <!-- Setup -->
+    <div class="glass-card mb-24">
+        <div class="card-header">
+            <div class="card-title"><span class="icon">⚙️</span> Optimizer Settings</div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="optAmount">Investment Amount (₹)</label>
+                <input type="number" id="optAmount" value="{{ profile.investment_amount if profile and profile.investment_amount else 100000 }}" min="1000">
+            </div>
+            <div class="form-group">
+                <label for="optRisk">Risk Tolerance</label>
+                <select id="optRisk">
+                    <option value="conservative" {{ 'selected' if profile and profile.risk_tolerance == 'conservative' }}>Conservative</option>
+                    <option value="moderate" {{ 'selected' if not profile or not profile.risk_tolerance or profile.risk_tolerance == 'moderate' }}>Moderate</option>
+                    <option value="aggressive" {{ 'selected' if profile and profile.risk_tolerance == 'aggressive' }}>Aggressive</option>
+                    <option value="very_aggressive" {{ 'selected' if profile and profile.risk_tolerance == 'very_aggressive' }}>Very Aggressive</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="optStocks">Stocks to Include (comma-separated NSE symbols)</label>
+            <input type="text" id="optStocks" value="RELIANCE, TCS, HDFCBANK, INFY, ITC, SBIN, BAJFINANCE, TITAN" 
+                   placeholder="e.g., RELIANCE, TCS, HDFCBANK">
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">
+                Popular: RELIANCE, TCS, HDFCBANK, INFY, ICICIBANK, ITC, SBIN, BHARTIARTL, TITAN, BAJFINANCE, WIPRO, MARUTI
+            </div>
+        </div>
+
+        <button class="btn btn-primary" id="optimizeBtn" onclick="runOptimizer()" style="width: auto; margin-top: 8px;">
+            💼 Optimize Portfolio
+        </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="optLoading" class="hidden">
+        <div class="glass-card" style="text-align: center; padding: 60px;">
+            <div class="spinner" style="width: 48px; height: 48px; margin: 0 auto 20px; border-width: 3px;"></div>
+            <h3 style="margin-bottom: 8px;">Optimizing Portfolio...</h3>
+            <p style="color: var(--text-secondary);">Fetching historical data, computing covariance matrix, and running Sharpe ratio optimization. This may take 30-60 seconds.</p>
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div id="optResults" class="hidden">
+        <!-- Portfolio Metrics -->
+        <div class="stats-grid mb-24">
+            <div class="stat-card">
+                <div class="stat-icon green">📈</div>
+                <div class="stat-value text-success" id="optReturn">--</div>
+                <div class="stat-label">Expected Return (Annual)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon amber">📊</div>
+                <div class="stat-value text-warning" id="optVol">--</div>
+                <div class="stat-label">Portfolio Volatility</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon indigo">⚡</div>
+                <div class="stat-value text-accent" id="optSharpe">--</div>
+                <div class="stat-label">Sharpe Ratio</div>
+            </div>
+        </div>
+
+        <div class="grid-2 mb-24">
+            <!-- Optimal Weights -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">🥧</span> Optimal Stock Allocation</div>
+                </div>
+                <div style="height: 280px; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="optPieChart"></canvas>
+                </div>
+                <div id="optWeightsList" style="margin-top: 16px;"></div>
+            </div>
+
+            <!-- Efficient Frontier -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">📉</span> Efficient Frontier</div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="frontierChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full Asset Allocation -->
+        <div class="glass-card mb-24">
+            <div class="card-header">
+                <div class="card-title"><span class="icon">💰</span> Complete Investment Plan</div>
+            </div>
+            <div id="fullAllocation"></div>
+        </div>
+    </div>
+
+    <div class="disclaimer">
+        <span class="warn-icon">⚠️</span>
+        <span>Portfolio optimization is based on historical data using Modern Portfolio Theory. Past performance does not guarantee future results. This is for educational purposes only.</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script>
+let optPieChart = null;
+let frontierChart = null;
+
+function runOptimizer() {
+    const amount = parseFloat(document.getElementById('optAmount').value) || 100000;
+    const risk = document.getElementById('optRisk').value;
+    const stocksInput = document.getElementById('optStocks').value;
+    
+    const symbols = stocksInput.split(',').map(s => {
+        s = s.trim().toUpperCase();
+        return s.includes('.') ? s : s + '.NS';
+    }).filter(s => s.length > 3);
+    
+    if (symbols.length < 2) {
+        alert('Please enter at least 2 stock symbols');
+        return;
+    }
+    
+    document.getElementById('optLoading').classList.remove('hidden');
+    document.getElementById('optResults').classList.add('hidden');
+    document.getElementById('optimizeBtn').disabled = true;
+    
+    fetch('/api/optimize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symbols, risk_tolerance: risk, amount })
+    })
+    .then(r => r.json())
+    .then(data => {
+        document.getElementById('optLoading').classList.add('hidden');
+        document.getElementById('optimizeBtn').disabled = false;
+        
+        if (!data.success) {
+            alert(data.error || 'Optimization failed');
+            return;
+        }
+        
+        displayOptimization(data, amount);
+    })
+    .catch(err => {
+        document.getElementById('optLoading').classList.add('hidden');
+        document.getElementById('optimizeBtn').disabled = false;
+        alert('Error: ' + err.message);
+    });
+}
+
+function displayOptimization(data, amount) {
+    document.getElementById('optResults').classList.remove('hidden');
+    
+    const opt = data.optimization || {};
+    
+    // Metrics
+    document.getElementById('optReturn').textContent = (opt.portfolio_return || 0).toFixed(2) + '%';
+    document.getElementById('optVol').textContent = (opt.portfolio_volatility || 0).toFixed(2) + '%';
+    document.getElementById('optSharpe').textContent = (opt.sharpe_ratio || 0).toFixed(3);
+    
+    // Pie Chart
+    const allocation = opt.allocation || {};
+    const labels = Object.keys(allocation).map(s => s.replace('.NS', ''));
+    const weights = Object.values(allocation).map(a => a.weight);
+    const colors = ['#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#a855f7', '#ef4444', '#ec4899', '#14b8a6', '#f97316', '#8b5cf6'];
+    
+    if (optPieChart) optPieChart.destroy();
+    
+    const pieCtx = document.getElementById('optPieChart');
+    optPieChart = new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: weights,
+                backgroundColor: colors.slice(0, labels.length),
+                borderWidth: 0,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            cutout: '60%',
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+    
+    // Weights list
+    let weightsHtml = '<ul class="allocation-list">';
+    Object.entries(allocation).forEach(([symbol, data], i) => {
+        const stockAmount = (amount * data.weight / 100).toFixed(0);
+        weightsHtml += `
+            <li class="allocation-item">
+                <div class="alloc-info">
+                    <div class="alloc-dot" style="background: ${colors[i % colors.length]}"></div>
+                    <div>
+                        <span class="alloc-name">${symbol.replace('.NS', '')}</span>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">₹${parseInt(stockAmount).toLocaleString('en-IN')}</div>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span class="alloc-pct">${data.weight.toFixed(1)}%</span>
+                    <div style="font-size: 0.7rem; color: ${data.expected_return >= 0 ? 'var(--accent-success)' : 'var(--accent-danger)'};">
+                        ${data.expected_return >= 0 ? '+' : ''}${data.expected_return.toFixed(1)}% ret.
+                    </div>
+                </div>
+            </li>`;
+    });
+    weightsHtml += '</ul>';
+    document.getElementById('optWeightsList').innerHTML = weightsHtml;
+    
+    // Efficient Frontier
+    const frontier = data.efficient_frontier || [];
+    if (frontier.length > 0 && frontierChart) frontierChart.destroy();
+    
+    const frontCtx = document.getElementById('frontierChart');
+    frontierChart = new Chart(frontCtx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Portfolios',
+                data: frontier.map(p => ({ x: p.volatility, y: p.return })),
+                backgroundColor: frontier.map(p => {
+                    const hue = Math.min(120, Math.max(0, p.sharpe * 40));
+                    return `hsla(${hue}, 70%, 50%, 0.5)`;
+                }),
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }, {
+                label: 'Optimal',
+                data: [{ x: opt.portfolio_volatility, y: opt.portfolio_return }],
+                backgroundColor: '#6366f1',
+                borderColor: '#fff',
+                borderWidth: 2,
+                pointRadius: 10,
+                pointHoverRadius: 12,
+                pointStyle: 'star'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            return `Return: ${ctx.parsed.y.toFixed(2)}% | Risk: ${ctx.parsed.x.toFixed(2)}%`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: { display: true, text: 'Volatility (%)', color: '#94a3b8' },
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    ticks: { color: '#64748b' }
+                },
+                y: {
+                    title: { display: true, text: 'Return (%)', color: '#94a3b8' },
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    ticks: { color: '#64748b' }
+                }
+            }
+        }
+    });
+    
+    // Full allocation
+    const alloc = data.allocation || {};
+    if (alloc.categories) {
+        const catIcons = { stocks: '📈', mutual_funds: '📊', gold: '🪙', bonds: '🏛️', fd: '🏦' };
+        let allocHtml = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">';
+        
+        for (const [cat, catData] of Object.entries(alloc.categories)) {
+            allocHtml += `
+                <div style="padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span style="font-weight: 600;">${catIcons[cat] || ''} ${catData.name}</span>
+                        <span style="font-family: var(--font-mono); font-weight: 600; color: var(--accent-primary-light);">${catData.allocation_pct}%</span>
+                    </div>
+                    <div style="font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); margin-bottom: 12px;">
+                        ₹${catData.amount?.toLocaleString('en-IN')}
+                    </div>`;
+            
+            (catData.sub_allocations || []).forEach(sub => {
+                allocHtml += `
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; padding: 6px 0; border-top: 1px solid rgba(255,255,255,0.04);">
+                        <span style="color: var(--text-secondary);">${sub.symbol || sub.bank || sub.type || ''}</span>
+                        <span style="font-family: var(--font-mono);">₹${sub.amount?.toLocaleString('en-IN')}</span>
+                    </div>`;
+            });
+            
+            allocHtml += '</div>';
+        }
+        
+        allocHtml += '</div>';
+        document.getElementById('fullAllocation').innerHTML = allocHtml;
+    }
+}
+</script>
+{% endblock %}

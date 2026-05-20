@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — InvestIQ{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h2>Welcome back, {{ full_name or username }} 👋</h2>
+        <p>Your AI-powered investment insights for Indian markets</p>
+    </div>
+
+    {% if not has_profile %}
+    <div class="glass-card mb-24" style="border-color: rgba(99, 102, 241, 0.3);">
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="font-size: 2rem;">🎯</div>
+            <div style="flex: 1;">
+                <h3 style="font-size: 1.1rem; margin-bottom: 4px;">Complete Your Investment Profile</h3>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">Set up your risk tolerance, goals, and investment amount to get personalized ML-powered recommendations.</p>
+            </div>
+            <a href="{{ url_for('dashboard.profile') }}" class="btn btn-primary" style="width: auto;">Setup Profile →</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Market Ticker -->
+    <div class="market-ticker" id="marketTicker">
+        <div class="ticker-scroll" id="tickerScroll">
+            <div class="loading-spinner"><div class="spinner"></div> Loading market data...</div>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+            <div class="stat-icon indigo">📊</div>
+            <div class="stat-value" id="niftyValue">--</div>
+            <div class="stat-label">NIFTY 50</div>
+            <div class="stat-change" id="niftyChange">--</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon cyan">📉</div>
+            <div class="stat-value" id="sensexValue">--</div>
+            <div class="stat-label">SENSEX</div>
+            <div class="stat-change" id="sensexChange">--</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon amber">🪙</div>
+            <div class="stat-value" id="goldValue">--</div>
+            <div class="stat-label">GOLD (USD/oz)</div>
+            <div class="stat-change" id="goldChange">--</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green">💰</div>
+            <div class="stat-value" id="investAmount">₹{{ "{:,.0f}".format(profile.investment_amount|default(0, true)) }}</div>
+            <div class="stat-label">Investment Amount</div>
+        </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid-sidebar">
+        <!-- Left: Quick Actions + Top Movers -->
+        <div>
+            <!-- Quick Actions -->
+            <div class="glass-card mb-24">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">⚡</span> Quick Actions</div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                    <a href="{{ url_for('dashboard.predictions') }}" class="btn btn-secondary" style="flex-direction: column; padding: 20px;">
+                        <span style="font-size: 1.5rem; margin-bottom: 8px;">🤖</span>
+                        <span style="font-size: 0.8rem;">ML Predictions</span>
+                    </a>
+                    <a href="{{ url_for('dashboard.portfolio') }}" class="btn btn-secondary" style="flex-direction: column; padding: 20px;">
+                        <span style="font-size: 1.5rem; margin-bottom: 8px;">💼</span>
+                        <span style="font-size: 0.8rem;">Optimize Portfolio</span>
+                    </a>
+                    <a href="{{ url_for('dashboard.market') }}" class="btn btn-secondary" style="flex-direction: column; padding: 20px;">
+                        <span style="font-size: 1.5rem; margin-bottom: 8px;">📈</span>
+                        <span style="font-size: 0.8rem;">Live Market</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Top Movers -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">🔥</span> Top Movers Today</div>
+                    <a href="{{ url_for('dashboard.market') }}" class="btn btn-sm btn-secondary">View All</a>
+                </div>
+                <div id="topMovers">
+                    <div class="loading-spinner"><div class="spinner"></div> Fetching market data...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div>
+            <!-- Risk Profile -->
+            <div class="glass-card mb-24">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">🎯</span> Your Risk Profile</div>
+                </div>
+                {% if profile and profile.risk_tolerance %}
+                <div style="text-align: center; margin-bottom: 16px;">
+                    <div style="font-size: 2.5rem; font-weight: 800; text-transform: capitalize; color: var(--accent-primary-light);">
+                        {{ profile.risk_tolerance|default('Moderate') }}
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 4px;">Risk Tolerance Level</p>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.8rem;">
+                    <div style="padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <div style="color: var(--text-muted); margin-bottom: 4px;">Horizon</div>
+                        <div style="font-weight: 600; text-transform: capitalize;">{{ profile.investment_horizon|default('Medium') }}</div>
+                    </div>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <div style="color: var(--text-muted); margin-bottom: 4px;">Experience</div>
+                        <div style="font-weight: 600; text-transform: capitalize;">{{ profile.experience_level|default('Beginner') }}</div>
+                    </div>
+                </div>
+                {% else %}
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">Complete your profile to see risk assessment.</p>
+                <a href="{{ url_for('dashboard.profile') }}" class="btn btn-primary btn-sm mt-16">Setup →</a>
+                {% endif %}
+            </div>
+
+            <!-- Model-Suggested Allocation -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">🥧</span> Suggested Allocation</div>
+                </div>
+                <div style="height: 220px; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="allocationChart" width="200" height="200"></canvas>
+                </div>
+                <ul class="allocation-list" id="allocationList">
+                    <!-- Filled by JS -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="disclaimer">
+        <span class="warn-icon">⚠️</span>
+        <span>All investment suggestions are generated by ML models for educational purposes only. Past performance does not guarantee future results. Always consult a SEBI-registered financial advisor before making investment decisions.</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadMarketIndices();
+    loadTopMovers();
+    loadAllocationChart('{{ profile.risk_tolerance|default("moderate") }}');
+});
+
+function loadMarketIndices() {
+    fetch('/api/market/indices')
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) return;
+            const d = data.data;
+            
+            // Update stat cards
+            if (d.NIFTY50) {
+                document.getElementById('niftyValue').textContent = d.NIFTY50.price?.toLocaleString('en-IN') || '--';
+                updateChange('niftyChange', d.NIFTY50.change_pct);
+            }
+            if (d.SENSEX) {
+                document.getElementById('sensexValue').textContent = d.SENSEX.price?.toLocaleString('en-IN') || '--';
+                updateChange('sensexChange', d.SENSEX.change_pct);
+            }
+            if (d.GOLD) {
+                document.getElementById('goldValue').textContent = '$' + (d.GOLD.price?.toLocaleString() || '--');
+                updateChange('goldChange', d.GOLD.change_pct);
+            }
+            
+            // Update ticker
+            let tickerHtml = '';
+            for (const [name, info] of Object.entries(d)) {
+                const changeClass = (info.change_pct >= 0) ? 'up' : 'down';
+                const arrow = (info.change_pct >= 0) ? '▲' : '▼';
+                tickerHtml += `
+                    <div class="ticker-item">
+                        <span class="ticker-name">${info.display_name || name}</span>
+                        <span class="ticker-price">${info.price?.toLocaleString('en-IN') || '--'}</span>
+                        <span class="ticker-change ${changeClass}">${arrow} ${Math.abs(info.change_pct || 0).toFixed(2)}%</span>
+                    </div>`;
+            }
+            // Duplicate for infinite scroll
+            document.getElementById('tickerScroll').innerHTML = tickerHtml + tickerHtml;
+        })
+        .catch(() => {
+            document.getElementById('tickerScroll').innerHTML = '<span style="color: var(--text-muted);">Market data unavailable</span>';
+        });
+}
+
+function updateChange(elementId, changePct) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const isPositive = changePct >= 0;
+    el.className = 'stat-change ' + (isPositive ? 'positive' : 'negative');
+    el.textContent = (isPositive ? '+' : '') + (changePct || 0).toFixed(2) + '%';
+}
+
+function loadTopMovers() {
+    fetch('/api/market/movers')
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) return;
+            const container = document.getElementById('topMovers');
+            let html = '<table class="data-table"><thead><tr><th>Stock</th><th>Price</th><th>Change</th></tr></thead><tbody>';
+            
+            const all = [...(data.data.gainers || []).slice(0, 4), ...(data.data.losers || []).slice(0, 3)];
+            
+            all.forEach(stock => {
+                const changeClass = stock.change_pct >= 0 ? 'text-success' : 'text-danger';
+                const arrow = stock.change_pct >= 0 ? '▲' : '▼';
+                html += `
+                    <tr style="cursor: pointer;" onclick="window.location='/market?symbol=${stock.symbol}'">
+                        <td>
+                            <div style="font-weight: 600; font-size: 0.85rem;">${stock.name || stock.symbol}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">${stock.symbol.replace('.NS','')}</div>
+                        </td>
+                        <td class="price">₹${stock.price?.toLocaleString('en-IN')}</td>
+                        <td class="${changeClass}" style="font-weight: 600; font-size: 0.85rem;">
+                            ${arrow} ${Math.abs(stock.change_pct).toFixed(2)}%
+                        </td>
+                    </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        })
+        .catch(() => {
+            document.getElementById('topMovers').innerHTML = '<p style="color: var(--text-muted);">Unable to load market data</p>';
+        });
+}
+
+function loadAllocationChart(riskProfile) {
+    const allocations = {
+        conservative: { Stocks: 20, 'Mutual Funds': 25, Gold: 15, Bonds: 25, FD: 15 },
+        moderate:     { Stocks: 35, 'Mutual Funds': 30, Gold: 10, Bonds: 15, FD: 10 },
+        aggressive:   { Stocks: 50, 'Mutual Funds': 30, Gold: 5, Bonds: 10, FD: 5 },
+        very_aggressive: { Stocks: 65, 'Mutual Funds': 25, Gold: 5, Bonds: 3, FD: 2 }
+    };
+    
+    const alloc = allocations[riskProfile] || allocations.moderate;
+    const colors = ['#6366f1', '#06b6d4', '#f59e0b', '#10b981', '#a855f7'];
+    
+    // Chart
+    const ctx = document.getElementById('allocationChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(alloc),
+                datasets: [{
+                    data: Object.values(alloc),
+                    backgroundColor: colors,
+                    borderWidth: 0,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                cutout: '65%',
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+    
+    // Legend list
+    const list = document.getElementById('allocationList');
+    if (list) {
+        let html = '';
+        Object.entries(alloc).forEach(([name, pct], i) => {
+            html += `
+                <li class="allocation-item">
+                    <div class="alloc-info">
+                        <div class="alloc-dot" style="background: ${colors[i]}"></div>
+                        <span class="alloc-name">${name}</span>
+                    </div>
+                    <span class="alloc-pct">${pct}%</span>
+                </li>`;
+        });
+        list.innerHTML = html;
+    }
+}
+</script>
+{% endblock %}

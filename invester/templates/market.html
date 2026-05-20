@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Live Market — InvestIQ{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="page-header">
+        <h2>📈 Live Market Data</h2>
+        <p>Real-time stock prices, charts, and technical indicators from NSE/BSE</p>
+    </div>
+
+    <!-- Search -->
+    <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="stockSearch" placeholder="Search stocks... e.g., RELIANCE, TCS, INFY" autocomplete="off">
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <!-- Market Overview -->
+    <div class="stats-grid mb-24" id="indicesGrid">
+        <!-- Filled by JS -->
+    </div>
+
+    <!-- Stock Detail Section (hidden by default) -->
+    <div id="stockDetail" class="hidden">
+        <div class="glass-card mb-24">
+            <div class="card-header">
+                <div>
+                    <h3 id="stockName" style="font-size: 1.25rem; font-weight: 700;"></h3>
+                    <p id="stockSymbol" style="color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-mono);"></p>
+                </div>
+                <div style="text-align: right;">
+                    <div id="stockPrice" style="font-size: 2rem; font-weight: 800; font-family: var(--font-mono);"></div>
+                    <div id="stockChange" style="font-weight: 600;"></div>
+                </div>
+            </div>
+
+            <!-- Chart Period Buttons -->
+            <div class="chart-controls">
+                <button class="chart-btn" data-period="1mo" onclick="loadChart(currentSymbol, '1mo', this)">1M</button>
+                <button class="chart-btn" data-period="3mo" onclick="loadChart(currentSymbol, '3mo', this)">3M</button>
+                <button class="chart-btn active" data-period="6mo" onclick="loadChart(currentSymbol, '6mo', this)">6M</button>
+                <button class="chart-btn" data-period="1y" onclick="loadChart(currentSymbol, '1y', this)">1Y</button>
+                <button class="chart-btn" data-period="2y" onclick="loadChart(currentSymbol, '2y', this)">2Y</button>
+            </div>
+
+            <!-- Price Chart -->
+            <div class="chart-container">
+                <canvas id="priceChart"></canvas>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- Stock Info -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">📋</span> Stock Information</div>
+                </div>
+                <div id="stockInfo">
+                    <div class="loading-spinner"><div class="spinner"></div> Loading...</div>
+                </div>
+            </div>
+
+            <!-- Technical Indicators -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">📊</span> Technical Indicators</div>
+                </div>
+                <div id="technicalIndicators">
+                    <div class="loading-spinner"><div class="spinner"></div> Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Movers Section -->
+    <div id="moversSection">
+        <div class="grid-2">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">🟢</span> Top Gainers</div>
+                </div>
+                <div id="topGainers">
+                    <div class="loading-spinner"><div class="spinner"></div> Loading...</div>
+                </div>
+            </div>
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">🔴</span> Top Losers</div>
+                </div>
+                <div id="topLosers">
+                    <div class="loading-spinner"><div class="spinner"></div> Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/market.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadIndices();
+    loadMovers();
+    
+    // Check URL params
+    const params = new URLSearchParams(window.location.search);
+    const symbol = params.get('symbol');
+    if (symbol) {
+        loadStockDetail(symbol);
+    }
+});
+</script>
+{% endblock %}

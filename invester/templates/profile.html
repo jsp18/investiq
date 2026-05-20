@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Investment Profile — InvestIQ{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="page-header">
+        <h2>🎯 Investment Profile</h2>
+        <p>Tell us about your financial goals and we'll tailor ML-powered recommendations just for you</p>
+    </div>
+
+    <div class="glass-card">
+        <form class="profile-form" id="profileForm" method="POST" action="{{ url_for('dashboard.profile') }}">
+            <h3 style="font-size: 1.1rem; margin-bottom: 24px; color: var(--accent-primary-light);">Personal Details</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" min="18" max="99" value="{{ profile.age or '' }}" placeholder="Your age" required>
+                </div>
+                <div class="form-group">
+                    <label for="profession">Profession</label>
+                    <input type="text" id="profession" name="profession" value="{{ profile.profession or '' }}" placeholder="e.g., Software Engineer">
+                </div>
+                <div class="form-group">
+                    <label for="monthly_income">Monthly Income (₹)</label>
+                    <input type="number" id="monthly_income" name="monthly_income" min="0" value="{{ profile.monthly_income or '' }}" placeholder="e.g., 50000">
+                </div>
+                <div class="form-group">
+                    <label for="investment_amount">Amount to Invest (₹)</label>
+                    <input type="number" id="investment_amount" name="investment_amount" min="1000" value="{{ profile.investment_amount or '' }}" placeholder="e.g., 100000" required>
+                </div>
+            </div>
+
+            <h3 style="font-size: 1.1rem; margin: 32px 0 24px; color: var(--accent-primary-light);">Investment Preferences</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="risk_tolerance">Risk Tolerance</label>
+                    <select id="risk_tolerance" name="risk_tolerance" required>
+                        <option value="conservative" {{ 'selected' if profile and profile.risk_tolerance == 'conservative' }}>Conservative — Safety first, low risk</option>
+                        <option value="moderate" {{ 'selected' if not profile or profile.risk_tolerance == 'moderate' }}>Moderate — Balanced risk-reward</option>
+                        <option value="aggressive" {{ 'selected' if profile and profile.risk_tolerance == 'aggressive' }}>Aggressive — Higher risk for growth</option>
+                        <option value="very_aggressive" {{ 'selected' if profile and profile.risk_tolerance == 'very_aggressive' }}>Very Aggressive — Maximum growth</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="investment_horizon">Investment Horizon</label>
+                    <select id="investment_horizon" name="investment_horizon" required>
+                        <option value="short" {{ 'selected' if profile and profile.investment_horizon == 'short' }}>Short Term (< 1 year)</option>
+                        <option value="medium" {{ 'selected' if not profile or profile.investment_horizon == 'medium' }}>Medium Term (1-5 years)</option>
+                        <option value="long" {{ 'selected' if profile and profile.investment_horizon == 'long' }}>Long Term (5+ years)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="experience_level">Trading Experience</label>
+                    <select id="experience_level" name="experience_level">
+                        <option value="beginner" {{ 'selected' if not profile or profile.experience_level == 'beginner' }}>Beginner — Just starting out</option>
+                        <option value="intermediate" {{ 'selected' if profile and profile.experience_level == 'intermediate' }}>Intermediate — Some experience</option>
+                        <option value="advanced" {{ 'selected' if profile and profile.experience_level == 'advanced' }}>Advanced — Experienced trader</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="goals">Investment Goals</label>
+                    <select id="goals" name="goals">
+                        <option value="wealth_growth" {{ 'selected' if not profile or profile.goals == 'wealth_growth' }}>Wealth Growth</option>
+                        <option value="retirement" {{ 'selected' if profile and profile.goals == 'retirement' }}>Retirement Planning</option>
+                        <option value="income" {{ 'selected' if profile and profile.goals == 'income' }}>Regular Income</option>
+                        <option value="tax_saving" {{ 'selected' if profile and profile.goals == 'tax_saving' }}>Tax Saving</option>
+                        <option value="education" {{ 'selected' if profile and profile.goals == 'education' }}>Education Fund</option>
+                        <option value="home" {{ 'selected' if profile and profile.goals == 'home' }}>Home Purchase</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="existing_investments">Existing Investments (Optional)</label>
+                <textarea id="existing_investments" name="existing_investments" rows="3" placeholder="Describe any existing investments (e.g., FDs, Mutual Funds, Stocks, PPF, etc.)">{{ profile.existing_investments or '' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="preferred_sectors">Preferred Sectors (Optional)</label>
+                <input type="text" id="preferred_sectors" name="preferred_sectors" value="{{ profile.preferred_sectors or '' }}" placeholder="e.g., IT, Banking, Pharma, Auto">
+            </div>
+
+            <div style="margin-top: 32px; display: flex; gap: 12px;">
+                <button type="submit" class="btn btn-primary" style="width: auto; padding: 14px 40px;">
+                    Save Profile & Get Recommendations →
+                </button>
+                <a href="{{ url_for('dashboard.home') }}" class="btn btn-secondary" style="width: auto;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

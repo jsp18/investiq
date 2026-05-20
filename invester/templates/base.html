@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="InvestIQ - AI-Powered Personal Investing Assistant for Indian Markets. ML-driven stock predictions, portfolio optimization, and personalized investment recommendations.">
+    <title>{% block title %}InvestIQ — Personal Investing Assistant{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% block navbar %}
+    {% if session.get('user_id') %}
+    <nav class="navbar" id="mainNav">
+        <div class="nav-brand">
+            <div class="brand-icon">📊</div>
+            <h1>InvestIQ</h1>
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="{{ url_for('dashboard.home') }}" class="{{ 'active' if request.endpoint == 'dashboard.home' }}">🏠 Dashboard</a></li>
+            <li><a href="{{ url_for('dashboard.market') }}" class="{{ 'active' if request.endpoint == 'dashboard.market' }}">📈 Market</a></li>
+            <li><a href="{{ url_for('dashboard.predictions') }}" class="{{ 'active' if request.endpoint == 'dashboard.predictions' }}">🤖 Predictions</a></li>
+            <li><a href="{{ url_for('dashboard.portfolio') }}" class="{{ 'active' if request.endpoint == 'dashboard.portfolio' }}">💼 Portfolio</a></li>
+            <li><a href="{{ url_for('dashboard.profile') }}" class="{{ 'active' if request.endpoint == 'dashboard.profile' }}">👤 Profile</a></li>
+        </ul>
+        <div class="nav-user">
+            <span class="user-name">{{ session.get('username', 'User') }}</span>
+            <div class="user-avatar">{{ session.get('username', 'U')[0]|upper }}</div>
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-secondary" style="margin-left: 8px;">Logout</a>
+        </div>
+    </nav>
+    {% endif %}
+    {% endblock %}
+
+    {% block content %}{% endblock %}
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
